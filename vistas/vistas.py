@@ -184,6 +184,13 @@ class VistaApuesta(Resource):
         db.session.commit()
         return "", 204
 
+    @jwt_required()
+    def delete3(self, id_apuesta):
+        apuesta = Apuesta.query.get_or_404(id_apuesta)
+        db.session.delete(apuesta)
+        db.session.commit()
+        return "", 204
+
 
 class VistaTerminacionCarrera(Resource):
     def put(self, id_competidor):
