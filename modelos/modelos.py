@@ -10,16 +10,21 @@ class Apuesta(db.Model):
     valor_apostado = db.Column(db.Numeric)
     ganancia = db.Column(db.Numeric, default=0)
     nombre_apostador = db.Column(db.String(128))
-    id_competidor = db.Column(db.Integer, db.ForeignKey('competidor.id'))
-    id_carrera = db.Column(db.Integer, db.ForeignKey('carrera.id'))
+    id_competidor = db.Column(db.Integer, db.ForeignKey("competidor.id"))
+    id_carrera = db.Column(db.Integer, db.ForeignKey("carrera.id"))
+
+
+class Champion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
 
 
 class Carrera(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre_carrera = db.Column(db.String(128))
     abierta = db.Column(db.Boolean, default=True)
-    competidores = db.relationship('Competidor', cascade='all, delete, delete-orphan')
-    apuestas = db.relationship('Apuesta', cascade='all, delete, delete-orphan')
+    competidores = db.relationship("Competidor", cascade="all, delete, delete-orphan")
+    apuestas = db.relationship("Apuesta", cascade="all, delete, delete-orphan")
     usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"))
 
 
@@ -27,16 +32,16 @@ class Competidor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre_competidor = db.Column(db.String(128))
     probabilidad = db.Column(db.Numeric)
-    cuota = db.Column(db.Numeric);
+    cuota = db.Column(db.Numeric)
     es_ganador = db.Column(db.Boolean, default=False)
-    id_carrera = db.Column(db.Integer, db.ForeignKey('carrera.id'))
+    id_carrera = db.Column(db.Integer, db.ForeignKey("carrera.id"))
 
 
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(50))
     contrasena = db.Column(db.String(50))
-    carreras = db.relationship('Carrera', cascade='all, delete, delete-orphan')
+    carreras = db.relationship("Carrera", cascade="all, delete, delete-orphan")
 
 
 class ApuestaSchema(SQLAlchemyAutoSchema):
@@ -81,3 +86,10 @@ class UsuarioSchema(SQLAlchemyAutoSchema):
 class ReporteSchema(Schema):
     carrera = fields.Nested(CarreraSchema())
     ganancia_casa = fields.Float()
+
+
+class ChampionSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Champion
+        include_relationships = True
+        load_instance = True
