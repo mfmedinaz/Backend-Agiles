@@ -24,7 +24,7 @@ jobs:
       - name: pruebas+coverage
         id: pruebas
         run: |
-          coverage run -m unittest discove
+          coverage run -m unittest discover
           coverage xml
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
